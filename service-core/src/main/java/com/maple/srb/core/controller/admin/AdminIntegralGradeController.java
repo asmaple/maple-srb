@@ -32,13 +32,13 @@ public class AdminIntegralGradeController {
     @ApiOperation(value = "获取hello world")
     @GetMapping("/hello")
     public R hello() {
-        return R.ok().data("content","hello world");
+        return R.ok().data("content", "hello world");
     }
 
     @GetMapping("/list")
     public R listAll() {
         List<IntegralGrade> list = integralGradeService.list();
-        return R.ok().data("list",list);
+        return R.ok().data("list", list);
     }
 
     @ApiOperation(value = "根据id删除数据记录", notes = "逻辑删除")
@@ -47,7 +47,7 @@ public class AdminIntegralGradeController {
             @ApiParam(value = "要删除的id", example = "1", required = true)
             @PathVariable Long id) {
         boolean result = integralGradeService.removeById(id);
-        if(result) {
+        if (result) {
             return R.ok().message("删除成功");
         } else {
             return R.error().message("删除失败");
@@ -57,12 +57,12 @@ public class AdminIntegralGradeController {
     @ApiOperation(value = "新增积分等级")
     @PostMapping("/save")
     public R save(
-            @ApiParam(value = "积分等级对象",required = true)
+            @ApiParam(value = "积分等级对象", required = true)
             @RequestBody IntegralGrade integralGrade) {
 
         boolean result = integralGradeService.save(integralGrade);
-        if(result) {
-            return  R.ok().message("添加成功");
+        if (result) {
+            return R.ok().message("添加成功");
         } else {
             return R.error().message("添加失败");
         }
@@ -71,11 +71,11 @@ public class AdminIntegralGradeController {
     @ApiOperation(value = "根据id查询积分等级")
     @GetMapping("/get/{id}")
     public R getById(
-            @ApiParam(value = "积分id",example = "1", required = true)
-            @PathVariable Long id){
+            @ApiParam(value = "积分id", example = "1", required = true)
+            @PathVariable Long id) {
 
         IntegralGrade integralGrade = integralGradeService.getById(id);
-        if(integralGrade == null) {
+        if (integralGrade == null) {
             return R.ok().data("record", integralGrade);
         } else {
             return R.error().message("数据获取失败");
@@ -86,13 +86,13 @@ public class AdminIntegralGradeController {
     @PutMapping("/update")
     public R updateById(
             @ApiParam(value = "积分等级对象", required = true)
-            @RequestBody IntegralGrade integralGrade){
+            @RequestBody IntegralGrade integralGrade) {
 
         boolean result = integralGradeService.updateById(integralGrade);
 
-        if(result){
+        if (result) {
             return R.ok().message("更新成功");
-        }else{
+        } else {
             return R.error().message("更新失败");
         }
     }

@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan({"com.maple.srb"})
+@ComponentScan({"com.maple.srb","com.maple.common"})
 public class ServiceCoreApplication {
 
     public static void main(String[] args) {
