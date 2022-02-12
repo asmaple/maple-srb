@@ -63,6 +63,5 @@
             <artifactId>jackson-datatype-jsr310</artifactId>
         </dependency>
         <!-- end-->
-
     </dependencies>
 </project>

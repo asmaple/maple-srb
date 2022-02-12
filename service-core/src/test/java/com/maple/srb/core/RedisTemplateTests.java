@@ -3,16 +3,13 @@ package com.maple.srb.core;
 import com.maple.srb.core.mapper.DictMapper;
 import com.maple.srb.core.pojo.entity.Dict;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
 import java.util.concurrent.TimeUnit;
 
 @SpringBootTest
-@RunWith(SpringRunner.class)
 public class RedisTemplateTests {
 
     @Resource
