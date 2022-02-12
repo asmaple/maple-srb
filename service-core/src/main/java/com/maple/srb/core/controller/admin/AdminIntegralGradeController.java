@@ -75,7 +75,7 @@ public class AdminIntegralGradeController {
             @PathVariable Long id) {
 
         IntegralGrade integralGrade = integralGradeService.getById(id);
-        if (integralGrade == null) {
+        if (integralGrade != null) {
             return R.ok().data("record", integralGrade);
         } else {
             return R.error().message("数据获取失败");
