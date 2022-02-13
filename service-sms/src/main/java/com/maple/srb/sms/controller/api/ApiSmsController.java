@@ -12,19 +12,16 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
+@Api(tags = "短信管理")
+@CrossOrigin //跨域
 @RestController
 @RequestMapping("/api/sms")
-@Api(tags = "短信管理")
-//@CrossOrigin //跨域
 @Slf4j
 public class ApiSmsController {
 
@@ -34,7 +31,7 @@ public class ApiSmsController {
     @Resource
     private RedisTemplate redisTemplate;
 
-    @ApiOperation("获取验证码")
+    @ApiOperation(value = "获取验证码")
     @GetMapping("/send/{mobile}")
     public R send(
             @ApiParam(value = "手机号", required = true)
