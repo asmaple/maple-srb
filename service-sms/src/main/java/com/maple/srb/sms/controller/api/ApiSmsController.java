@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 @Api(tags = "短信管理")
-@CrossOrigin //跨域
+//@CrossOrigin //跨域
 @RestController
 @RequestMapping("/api/sms")
 @Slf4j
@@ -50,10 +50,11 @@ public class ApiSmsController {
         String code = RandomUtils.getFourBitRandom();
         HashMap<String, Object> map = new HashMap<>();
         map.put("code", code);
-        smsService.send(mobile, SmsProperties.TEMPLATE_CODE, map);
+        // todo 由于真正的发送短信无法使用 暂时注释
+//        smsService.send(mobile, SmsProperties.TEMPLATE_CODE, map);
 
-        //将验证码存入redis
-        redisTemplate.opsForValue().set("srb:sms:code:" + mobile, code, 5, TimeUnit.MINUTES);
+        //将验证码存入redis   1分钟后过期
+        redisTemplate.opsForValue().set("srb:sms:code:" + mobile, code, 1, TimeUnit.MINUTES);
 
         return R.ok().message("短信发送成功");
     }
