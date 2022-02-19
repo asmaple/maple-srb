@@ -63,5 +63,11 @@
             <artifactId>jackson-datatype-jsr310</artifactId>
         </dependency>
         <!-- end-->
+
+        <!-- jwt-->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+        </dependency>
     </dependencies>
 </project>

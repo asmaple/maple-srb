@@ -1,16 +1,23 @@
 package com.maple.srb.core.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.maple.common.exception.Assert;
 import com.maple.common.result.ResponseEnum;
 import com.maple.common.util.MD5;
+import com.maple.srb.base.util.JwtUtils;
 import com.maple.srb.core.mapper.UserAccountMapper;
+import com.maple.srb.core.mapper.UserLoginRecordMapper;
 import com.maple.srb.core.pojo.entity.UserAccount;
 import com.maple.srb.core.pojo.entity.UserInfo;
 import com.maple.srb.core.mapper.UserInfoMapper;
+import com.maple.srb.core.pojo.entity.UserLoginRecord;
+import com.maple.srb.core.pojo.vo.LoginVO;
 import com.maple.srb.core.pojo.vo.RegisterVO;
+import com.maple.srb.core.pojo.vo.UserInfoVO;
 import com.maple.srb.core.service.UserInfoService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +37,9 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
     @Resource
     private UserAccountMapper userAccountMapper;
 
+    @Resource
+    private UserLoginRecordMapper userLoginRecordMapper;
+
     @Transactional(rollbackFor = Exception.class) // 事务，出错回退
     @Override
     public boolean register(RegisterVO registerVO) {
@@ -46,6 +56,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
         userInfo.setName(registerVO.getMobile());
         userInfo.setMobile(registerVO.getMobile());
         userInfo.setPassword(MD5.encrypt(registerVO.getPassword()));
+        userInfo.setPassword(registerVO.getPassword());
         userInfo.setStatus(UserInfo.STATUS_NORMAL);
         baseMapper.insert(userInfo);
 
@@ -54,5 +65,49 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
         userAccount.setUserId(userInfo.getId());
         int result = userAccountMapper.insert(userAccount);
         return result > 0;
+    }
+
+    @Transactional(rollbackFor = Exception.class)  // 开启事务，失败回滚
+    @Override
+    public UserInfoVO login(LoginVO loginVO, String ip) {
+
+        String mobile = loginVO.getMobile();
+        String password = loginVO.getPassword();
+        Integer userType = loginVO.getUserType();
+
+        //用户是否存在
+        QueryWrapper<UserInfo> userInfoQueryWrapper = new QueryWrapper<>();
+        userInfoQueryWrapper
+                .eq("mobile", mobile)
+                .eq("user_type", userType);
+        UserInfo userInfo = baseMapper.selectOne(userInfoQueryWrapper);
+        Assert.notNull(userInfo, ResponseEnum.LOGIN_MOBILE_ERROR);
+
+        //密码是否正确
+        Assert.equals(MD5.encrypt(password), userInfo.getPassword(), ResponseEnum.LOGIN_PASSWORD_ERROR);
+
+        //用户是否被禁用
+        Assert.equals(userInfo.getStatus(), UserInfo.STATUS_NORMAL, ResponseEnum.LOGIN_LOKED_ERROR);
+
+        //记录登录日志
+        UserLoginRecord userLoginRecord = new UserLoginRecord();
+        userLoginRecord.setUserId(userInfo.getId());
+        userLoginRecord.setIp(ip);
+        userLoginRecordMapper.insert(userLoginRecord);
+
+        //生成token
+        String token = JwtUtils.createToken(userInfo.getId(), userInfo.getName());
+
+        //组装UserInfoVO
+        UserInfoVO userInfoVO = new UserInfoVO();
+        userInfoVO.setToken(token);
+        userInfoVO.setName(userInfo.getName());
+        userInfoVO.setNickName(userInfo.getNickName());
+        userInfoVO.setHeadImg(userInfo.getHeadImg());
+        userInfoVO.setMobile(mobile);
+        userInfoVO.setUserType(userType);
+        //返回
+        return userInfoVO;
+
     }
 }

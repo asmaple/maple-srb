@@ -2,7 +2,9 @@ package com.maple.srb.core.service;
 
 import com.maple.srb.core.pojo.entity.UserInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.maple.srb.core.pojo.vo.LoginVO;
 import com.maple.srb.core.pojo.vo.RegisterVO;
+import com.maple.srb.core.pojo.vo.UserInfoVO;
 
 /**
  * <p>
@@ -16,4 +18,5 @@ public interface UserInfoService extends IService<UserInfo> {
 
     boolean register(RegisterVO registerVO);
 
+    UserInfoVO login(LoginVO loginVO, String ip);
 }
