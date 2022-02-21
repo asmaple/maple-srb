@@ -56,7 +56,6 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
         userInfo.setName(registerVO.getMobile());
         userInfo.setMobile(registerVO.getMobile());
         userInfo.setPassword(MD5.encrypt(registerVO.getPassword()));
-        userInfo.setPassword(registerVO.getPassword());
         userInfo.setStatus(UserInfo.STATUS_NORMAL);
         baseMapper.insert(userInfo);
 

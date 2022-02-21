@@ -5,6 +5,7 @@ import com.maple.common.exception.Assert;
 import com.maple.common.result.R;
 import com.maple.common.result.ResponseEnum;
 import com.maple.common.util.RegexValidateUtils;
+import com.maple.srb.base.util.JwtUtils;
 import com.maple.srb.core.pojo.vo.LoginVO;
 import com.maple.srb.core.pojo.vo.RegisterVO;
 import com.maple.srb.core.pojo.vo.UserInfoVO;
@@ -83,8 +84,22 @@ public class UserInfoController {
         if(userInfoVO != null) {
             return R.ok().data("userInfo", userInfoVO);
         } else  {
-            return R.error().message(ResponseEnum.LOGIN_ERROR.getMessage());
+            return R.setResult(ResponseEnum.LOGIN_ERROR);
         }
     }
+
+    @ApiOperation("校验令牌")
+    @GetMapping("/checkToken")
+    public R checkToken(HttpServletRequest request) {
+
+        String token = request.getHeader("token");
+        boolean result = JwtUtils.checkToken(token);
+        if(result){
+            return R.ok();
+        }else{
+            return R.setResult(ResponseEnum.LOGIN_AUTH_ERROR);
+        }
+    }
+
 }
 
