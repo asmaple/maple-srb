@@ -3,6 +3,7 @@ package com.maple.common.result;
 import lombok.Data;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Data
@@ -48,6 +49,20 @@ public class R {
         r.setCode(ResponseEnum.DATA_EMPTY.getCode());
         r.setMessage(ResponseEnum.DATA_EMPTY.getMessage());
         return r;
+    }
+
+    /**
+     * 封装分页数据
+     * @param list 当前页数据列表
+     * @param current 当前页
+     * @param size 每页个数
+     * @param pages 总页数
+     * @param total 总个数
+     * @param <T> 指定泛型
+     * @return 返回包装过的分页数据
+     */
+    public static <T> R page(List<T> list,Long current, Long size, Long pages,Long total)  {
+        return ok().data("list",list).data("current",current).data("size",size).data("pages",pages).data("total",total);
     }
 
     /**

@@ -56,7 +56,7 @@ public class AdminUserInfoController {
     ){
         Page<UserInfo> pageParam = new Page<>(page, limit);
         IPage<UserInfo> pageModel = userInfoService.listPage(pageParam, userInfoQuery);
-        return R.ok().data("list", pageModel);
+        return R.<UserInfo>page(pageModel.getRecords(),pageModel.getCurrent(),pageModel.getSize(),pageModel.getPages(),pageModel.getTotal());
     }
 
 }
