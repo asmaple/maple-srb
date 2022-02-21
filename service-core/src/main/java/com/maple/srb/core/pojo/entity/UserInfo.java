@@ -25,7 +25,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @ApiModel(value="UserInfo对象", description="用户基本信息")
-@JsonIgnoreProperties({"deleted","updateTime"}) // 指定 response 中忽略的字段
+@JsonIgnoreProperties({"password","deleted","updateTime"}) // 指定 response 中忽略的字段
 public class UserInfo implements Serializable {
 
     // 用户状态

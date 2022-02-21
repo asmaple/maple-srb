@@ -24,4 +24,6 @@ public interface UserInfoService extends IService<UserInfo> {
     UserInfoVO login(LoginVO loginVO, String ip);
 
     IPage<UserInfo> listPage(Page<UserInfo> pageParam, UserInfoQuery userInfoQuery);
+
+    boolean lock(Long id, Integer status);
 }
