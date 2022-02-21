@@ -1,6 +1,7 @@
 package com.maple.srb.core.controller.admin;
 
 
+import cn.hutool.core.util.PageUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.maple.common.exception.Assert;
@@ -14,6 +15,7 @@ import com.maple.srb.core.pojo.vo.LoginVO;
 import com.maple.srb.core.pojo.vo.RegisterVO;
 import com.maple.srb.core.pojo.vo.UserInfoVO;
 import com.maple.srb.core.service.UserInfoService;
+import com.maple.srb.core.util.PageUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -56,7 +58,7 @@ public class AdminUserInfoController {
     ){
         Page<UserInfo> pageParam = new Page<>(page, limit);
         IPage<UserInfo> pageModel = userInfoService.listPage(pageParam, userInfoQuery);
-        return R.<UserInfo>page(pageModel.getRecords(),pageModel.getCurrent(),pageModel.getSize(),pageModel.getPages(),pageModel.getTotal());
+        return PageUtils.page(pageModel);
     }
 
 }
