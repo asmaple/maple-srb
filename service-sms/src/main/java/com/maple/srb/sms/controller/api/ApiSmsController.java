@@ -31,6 +31,9 @@ public class ApiSmsController {
     @Resource
     private RedisTemplate redisTemplate;
 
+//    @Resource
+//    private CoreUserInfoClient coreUserInfoClient;
+
     @ApiOperation(value = "获取验证码")
     @GetMapping("/send/{mobile}")
     public R send(

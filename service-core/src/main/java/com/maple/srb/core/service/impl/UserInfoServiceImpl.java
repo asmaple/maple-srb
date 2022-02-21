@@ -2,6 +2,9 @@ package com.maple.srb.core.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.maple.common.exception.Assert;
 import com.maple.common.result.ResponseEnum;
 import com.maple.common.util.MD5;
@@ -12,6 +15,7 @@ import com.maple.srb.core.pojo.entity.UserAccount;
 import com.maple.srb.core.pojo.entity.UserInfo;
 import com.maple.srb.core.mapper.UserInfoMapper;
 import com.maple.srb.core.pojo.entity.UserLoginRecord;
+import com.maple.srb.core.pojo.query.UserInfoQuery;
 import com.maple.srb.core.pojo.vo.LoginVO;
 import com.maple.srb.core.pojo.vo.RegisterVO;
 import com.maple.srb.core.pojo.vo.UserInfoVO;
@@ -108,5 +112,37 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
         //返回
         return userInfoVO;
 
+    }
+
+    @Override
+    public IPage<UserInfo> listPage(Page<UserInfo> pageParam, UserInfoQuery userInfoQuery) {
+
+        if(userInfoQuery == null){
+            return baseMapper.selectPage(pageParam, null);
+        }
+
+        String mobile = userInfoQuery.getMobile();
+        Integer status = userInfoQuery.getStatus();
+        Integer userType = userInfoQuery.getUserType();
+
+        QueryWrapper<UserInfo> userInfoQueryWrapper = new QueryWrapper<>();
+        userInfoQueryWrapper
+                .eq(StringUtils.isNotBlank(mobile), "mobile", mobile)
+                .eq(status != null, "status", status)
+                .eq(userType != null, "user_type", userType);
+
+//        if(StringUtils.isNotBlank(mobile)){
+//            userInfoQueryWrapper.eq("mobile", mobile);
+//        }
+//
+//        if(status != null){
+//            userInfoQueryWrapper.eq("status", status);
+//        }
+//
+//        if(userType != null){
+//            userInfoQueryWrapper.eq("user_type", userType);
+//        }
+
+        return baseMapper.selectPage(pageParam, userInfoQueryWrapper);
     }
 }
