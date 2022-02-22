@@ -10,6 +10,12 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
 
+# spring节点下 nacos
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848 # nacos服务地址
+
 aliyun:
   oss:
     endpoint: oss-cn-beijing.aliyuncs.com

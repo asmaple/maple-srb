@@ -5,6 +5,7 @@ import com.maple.common.result.R;
 import com.maple.common.result.ResponseEnum;
 import com.maple.common.util.RandomUtils;
 import com.maple.common.util.RegexValidateUtils;
+import com.maple.srb.sms.client.CoreUserInfoClient;
 import com.maple.srb.sms.service.SmsService;
 import com.maple.srb.sms.util.SmsProperties;
 import io.swagger.annotations.Api;
@@ -31,8 +32,8 @@ public class ApiSmsController {
     @Resource
     private RedisTemplate redisTemplate;
 
-//    @Resource
-//    private CoreUserInfoClient coreUserInfoClient;
+    @Resource
+    private CoreUserInfoClient coreUserInfoClient;
 
     @ApiOperation(value = "获取验证码")
     @GetMapping("/send/{mobile}")
@@ -46,9 +47,9 @@ public class ApiSmsController {
         Assert.isTrue(RegexValidateUtils.checkCellphone(mobile), ResponseEnum.MOBILE_ERROR);
 
         //判断手机号是否已经注册
-//        boolean result = coreUserInfoClient.checkMobile(mobile);
-//        log.info("result = " + result);
-//        Assert.isTrue(result == false, ResponseEnum.MOBILE_EXIST_ERROR);
+        boolean result = coreUserInfoClient.checkMobile(mobile);
+        log.info("result = " + result);
+        Assert.isTrue(!result, ResponseEnum.MOBILE_EXIST_ERROR);
 
         String code = RandomUtils.getFourBitRandom();
         HashMap<String, Object> map = new HashMap<>();

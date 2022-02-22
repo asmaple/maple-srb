@@ -3,7 +3,7 @@
 
     <contextName>Maple-Srb</contextName>
     <!-- 日志的输出目录 -->
-    <property name="log.path" value="F:/maple/srb/srb_log/sms" />
+    <property name="log.path" value="F:/maple/srb/srb_log/gateway" />
 
     <!--控制台日志格式：彩色日志-->
     <!-- magenta:洋红 -->
@@ -66,10 +66,10 @@
     </appender>
 
     <!-- 日志记录器  -->
-    <!--    <logger name="com.maple" level="INFO">-->
-    <!--        <appender-ref ref="CONSOLE" />-->
-    <!--        <appender-ref ref="FILE" />-->
-    <!--    </logger>-->
+<!--    <logger name="com.maple" level="INFO">-->
+<!--        <appender-ref ref="CONSOLE" />-->
+<!--        <appender-ref ref="FILE" />-->
+<!--    </logger>-->
 
     <!-- 开发环境和测试环境 -->
     <springProfile name="dev,test">
