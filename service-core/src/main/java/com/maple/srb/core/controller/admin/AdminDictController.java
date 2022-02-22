@@ -35,7 +35,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin/core/dict")
 @Slf4j
-@CrossOrigin
+//@CrossOrigin 使用网关 需要注释掉跨域注解
 public class AdminDictController {
 
     @Resource

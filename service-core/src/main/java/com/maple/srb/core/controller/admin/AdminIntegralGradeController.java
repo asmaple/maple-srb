@@ -21,7 +21,7 @@ import java.util.List;
  * @since 2022-02-01
  */
 @Api(tags = "积分等级管理")
-@CrossOrigin  // 跨域
+//@CrossOrigin  // 跨域
 @RestController
 @RequestMapping("/admin/core/integralGrade")
 public class AdminIntegralGradeController {
