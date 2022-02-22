@@ -1,6 +1,6 @@
-### 一、 下载  nacos-server-2.0.4.zip
-1，解压 nacos-server-2.0.4.zip
-2，进入到D:\tools\nacos-server-2.0.4\nacos\bin 目录下
+### 一、 下载  nacos-server-1.4.1.zip
+1，解压 nacos-server-1.4.1.zip
+2，进入到D:\tools\nacos-server-1.4.1\nacos\bin 目录下
 3，启动：startup.cmd -m standalone   // 单服务启动模式，
 4，访问：http://localhost:8848/nacos
 5，用户名密码：nacos/nacos

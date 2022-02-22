@@ -106,9 +106,6 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
         QueryWrapper<Dict> dictQueryWrapper = new QueryWrapper<>();
         dictQueryWrapper.eq("parent_id", id);
         Integer count = baseMapper.selectCount(dictQueryWrapper);
-        if(count.intValue() > 0){
-            return true;
-        }
-        return false;
+        return count > 0;
     }
 }
