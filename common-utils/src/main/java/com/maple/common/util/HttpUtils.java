@@ -1,6 +1,7 @@
 package com.maple.common.util;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.web.servlet.server.Encoding;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -62,7 +63,8 @@ public final class HttpUtils {
 				os.flush();
 				os.close();
 			}
-			BufferedReader in = new BufferedReader(new InputStreamReader(httpcon.getInputStream(),"utf-8"));
+
+			BufferedReader in = new BufferedReader(new InputStreamReader(httpcon.getInputStream(),Encoding.DEFAULT_CHARSET));
 			String inputLine;
 			StringBuilder bankXmlBuffer = new StringBuilder();
 			while ((inputLine = in.readLine()) != null) {  

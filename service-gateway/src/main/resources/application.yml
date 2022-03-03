@@ -28,3 +28,7 @@ spring:
           uri: lb://service-oss
           predicates:
             - Path=/*/oss/**
+        - id: service-minio
+          uri: lb://service-minio
+          predicates:
+            - Path=/*/minio/**
