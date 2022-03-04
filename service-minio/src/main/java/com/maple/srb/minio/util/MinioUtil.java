@@ -69,10 +69,12 @@ public class MinioUtil {
         String rename = RenameUtil.generateFileName(fileName);
         String objectName = RenameUtil.getFilePath(rename);
         String fileUrl = MinioProperties.ENDPOINT + SEPARATOR + bucketName + SEPARATOR + objectName;
+        String fileType = file.getContentType();
+        long fileSize = file.getSize();
         PutObjectArgs objectArgs = PutObjectArgs.builder().object(objectName)
                 .bucket(bucketName)
                 .object(objectName)
-                .contentType(file.getContentType())
+                .contentType(fileType)
                 .stream(file.getInputStream(), file.getSize(), ObjectWriteArgs.MIN_MULTIPART_SIZE).build();
         customMinioClient.putObject(objectArgs);
         return FileDTO.builder().bucketName(bucketName)
@@ -80,6 +82,8 @@ public class MinioUtil {
                 .originalFilename(fileName)
                 .url(fileUrl)
                 .rename(rename)
+                .fileType(fileType)
+                .fileSize(fileSize)
                 .build();
     }
 

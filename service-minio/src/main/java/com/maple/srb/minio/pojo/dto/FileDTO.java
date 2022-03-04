@@ -32,6 +32,16 @@ public class FileDTO {
     private String originalFilename;
 
     /**
+     * 文件类型
+     */
+    private String fileType;
+
+    /**
+     *
+     */
+    private Long fileSize;
+
+    /**
      * 加密密钥
      */
     private String encryptKey;
