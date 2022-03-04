@@ -17,8 +17,9 @@ public class RenameUtil {
         if (StringUtils.isBlank(renameFile)) {
             throw new Exception("文件名为空");
         }
-        return LocalDateTime.now().format(dateTimeFormatter) + "/" + renameFile;
+        return LocalDateTime.now().format(dateTimeFormatter) + MinioUtil.SEPARATOR + renameFile;
     }
+
 
     /**
      * 文件重命名

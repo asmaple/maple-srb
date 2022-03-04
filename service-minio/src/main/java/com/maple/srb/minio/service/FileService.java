@@ -1,25 +1,21 @@
 package com.maple.srb.minio.service;
 
-import java.util.Map;
+import com.maple.srb.minio.pojo.dto.FileDTO;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
 
 public interface FileService {
-    /**
-     * 分片上传初始化
-     *
-     * @param path        路径
-     * @param filename    文件名
-     * @param partCount   分片数量
-     * @param contentType /
-     * @return /
-     */
-    Map<String, Object> initMultiPartUpload(String path, String filename, Integer partCount, String contentType);
 
-    /**
-     * 完成分片上传
-     *
-     * @param objectName 文件名
-     * @param uploadId 标识
-     * @return /
-     */
-    boolean mergeMultipartUpload(String objectName, String uploadId);
+    FileDTO uploadFile(MultipartFile multipartFile, String bucketName);
+
+    boolean downloadFile(HttpServletResponse httpServletRespons,String bucketName,String fileName);
+
+    String getFileURL(String bucketName,String fileName);
+
+    boolean removeBucket(String bucketName);
+
+    boolean removeFile(String bucketName,String fileName);
+
+    boolean removeFiles(String bucketName, String keys);
 }

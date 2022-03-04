@@ -14,10 +14,12 @@ public enum ResponseEnum {
     ERROR(-1, "操作失败！"),
 
     //-1xx 服务器错误
+    PARAMETER_ERROR(-100, "参数错误"),
     BAD_SQL_GRAMMAR_ERROR(-101, "sql语法错误"),
     SERVLET_ERROR(-102, "servlet请求异常"), //-2xx 参数校验
     UPLOAD_ERROR(-103, "文件上传错误"),
-    EXPORT_DATA_ERROR(104, "数据导出失败"),
+    DOWNLOAD_ERROR(-104, "文件下载错误"),
+    EXPORT_DATA_ERROR(-105, "数据导出失败"),
 
 
     //-2xx 参数校验
@@ -53,6 +55,7 @@ public enum ResponseEnum {
     WEIXIN_CALLBACK_PARAM_ERROR(-601, "回调参数不正确"),
     WEIXIN_FETCH_ACCESSTOKEN_ERROR(-602, "获取access_token失败"),
     WEIXIN_FETCH_USERINFO_ERROR(-603, "获取用户信息失败"),
+
 
 
     DATA_EMPTY(409, "暂无数据！"),
