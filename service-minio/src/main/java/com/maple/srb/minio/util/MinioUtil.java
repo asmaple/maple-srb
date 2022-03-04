@@ -1,14 +1,15 @@
 package com.maple.srb.minio.util;
 
 import cn.hutool.core.io.IoUtil;
+import com.maple.srb.minio.enums.PolicyType;
 import com.maple.srb.minio.pojo.dto.FileDTO;
 import io.minio.*;
 import io.minio.http.Method;
 import io.minio.messages.Bucket;
 import io.minio.messages.DeleteError;
 import io.minio.messages.DeleteObject;
+import io.minio.messages.Item;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StreamUtils;
 import org.springframework.util.StringUtils;
@@ -43,6 +44,12 @@ public class MinioUtil {
         }
         try {
             customMinioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
+            //创建存储桶并设置策略
+            SetBucketPolicyArgs setBucketPolicyArgs = SetBucketPolicyArgs.builder()
+                    .bucket(bucketName)
+                    .config(getPolicy(bucketName,PolicyType.READ))
+                    .build();
+            customMinioClient.setBucketPolicy(setBucketPolicyArgs);
         } catch (Exception e) {
             e.getStackTrace();
             return false;
@@ -64,8 +71,9 @@ public class MinioUtil {
         String fileUrl = MinioProperties.ENDPOINT + SEPARATOR + bucketName + SEPARATOR + objectName;
         PutObjectArgs objectArgs = PutObjectArgs.builder().object(objectName)
                 .bucket(bucketName)
+                .object(objectName)
                 .contentType(file.getContentType())
-                .stream(file.getInputStream(), file.getSize(), -1).build();
+                .stream(file.getInputStream(), file.getSize(), ObjectWriteArgs.MIN_MULTIPART_SIZE).build();
         customMinioClient.putObject(objectArgs);
         return FileDTO.builder().bucketName(bucketName)
                 .objectName(objectName)
@@ -134,6 +142,16 @@ public class MinioUtil {
     }
 
     /**
+     * 查看桶策略
+     * @param bucketName
+     * @return
+     * @throws Exception
+     */
+    public String getBucketPolicy(String bucketName) throws Exception{
+        return customMinioClient.getBucketPolicy(GetBucketPolicyArgs.builder().bucket(bucketName).build());
+    }
+
+    /**
      * 获取全部bucket
      * <p>
      * https://docs.minio.io/cn/java-client-api-reference.html#listBuckets
@@ -148,6 +166,14 @@ public class MinioUtil {
      * @param bucketName bucket名称
      */
     public void removeBucket(String bucketName) throws Exception {
+        // 递归列举某个bucket下的所有文件，然后循环删除
+        Iterable<Result<Item>> iterable = customMinioClient.listObjects(ListObjectsArgs.builder()
+                .bucket(bucketName)
+                .recursive(true)
+                .build());
+        for (Result<Item> itemResult : iterable) {
+            removeObject(bucketName,itemResult.get().objectName());
+        }
         customMinioClient.removeBucket(RemoveBucketArgs.builder().bucket(bucketName).build());
     }
 
@@ -175,5 +201,77 @@ public class MinioUtil {
         });
         return customMinioClient.removeObjects(
                 RemoveObjectsArgs.builder().bucket(bucketName).objects(objects).build());
+    }
+
+
+    private String getPolicy(String bucketName, PolicyType policyType) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("{\n");
+        builder.append("    \"Statement\": [\n");
+        builder.append("        {\n");
+        builder.append("            \"Action\": [\n");
+        if (policyType == PolicyType.WRITE) {
+            builder.append("                \"s3:GetBucketLocation\",\n");
+            builder.append("                \"s3:ListBucketMultipartUploads\"\n");
+        } else if (policyType == PolicyType.READ_WRITE) {
+            builder.append("                \"s3:GetBucketLocation\",\n");
+            builder.append("                \"s3:ListBucket\",\n");
+            builder.append("                \"s3:ListBucketMultipartUploads\"\n");
+        } else {
+            builder.append("                \"s3:GetBucketLocation\"\n");
+        }
+        builder.append("            ],\n");
+        builder.append("            \"Effect\": \"Allow\",\n");
+        builder.append("            \"Principal\": \"*\",\n");
+        builder.append("            \"Resource\": \"arn:aws:s3:::");
+        builder.append(bucketName);
+        builder.append("\"\n");
+        builder.append("        },\n");
+        if (PolicyType.READ.equals(policyType)) {
+            builder.append("        {\n");
+            builder.append("            \"Action\": [\n");
+            builder.append("                \"s3:ListBucket\"\n");
+            builder.append("            ],\n");
+            builder.append("            \"Effect\": \"Deny\",\n");
+            builder.append("            \"Principal\": \"*\",\n");
+            builder.append("            \"Resource\": \"arn:aws:s3:::");
+            builder.append(bucketName);
+            builder.append("\"\n");
+            builder.append("        },\n");
+        }
+        builder.append("        {\n");
+        builder.append("            \"Action\": ");
+        switch (policyType) {
+            case WRITE:
+                builder.append("[\n");
+                builder.append("                \"s3:AbortMultipartUpload\",\n");
+                builder.append("                \"s3:DeleteObject\",\n");
+                builder.append("                \"s3:ListMultipartUploadParts\",\n");
+                builder.append("                \"s3:PutObject\"\n");
+                builder.append("            ],\n");
+                break;
+            case READ_WRITE:
+                builder.append("[\n");
+                builder.append("                \"s3:AbortMultipartUpload\",\n");
+                builder.append("                \"s3:DeleteObject\",\n");
+                builder.append("                \"s3:GetObject\",\n");
+                builder.append("                \"s3:ListMultipartUploadParts\",\n");
+                builder.append("                \"s3:PutObject\"\n");
+                builder.append("            ],\n");
+                break;
+            default:
+                builder.append("\"s3:GetObject\",\n");
+                break;
+        }
+        builder.append("            \"Effect\": \"Allow\",\n");
+        builder.append("            \"Principal\": \"*\",\n");
+        builder.append("            \"Resource\": \"arn:aws:s3:::");
+        builder.append(bucketName);
+        builder.append("/*\"\n");
+        builder.append("        }\n");
+        builder.append("    ],\n");
+        builder.append("    \"Version\": \"2012-10-17\"\n");
+        builder.append("}\n");
+        return builder.toString();
     }
 }

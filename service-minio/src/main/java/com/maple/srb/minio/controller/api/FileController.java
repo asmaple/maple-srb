@@ -81,7 +81,7 @@ public class FileController {
     @ApiParam(value = "桶名", required = true)
     @RequestParam("bucketName") String bucketName,
     @ApiParam(value = "文件名", required = true)
-     @RequestParam("fileName") String fileName) {
+    @RequestParam("fileName") String fileName) {
         boolean result = fileService.downloadFile(httpServletResponse, bucketName,fileName);
         log.info("=====文件下载结果=====>>>" + result);
     }
@@ -92,6 +92,7 @@ public class FileController {
     public R removeBucket(
                          @ApiParam(value = "桶名", required = true)
                          @RequestParam("bucketName") String bucketName) {
+
         boolean result = fileService.removeBucket(bucketName);
         return result? R.ok(): R.error();
     }
@@ -124,5 +125,17 @@ public class FileController {
 
         boolean result = fileService.removeFiles(bucketName,keys);
         return result? R.ok(): R.error();
+    }
+
+    @ApiOperation("查看桶策略")
+    @GetMapping("/getBucketPolicy")
+    public R queryBucketPolicy(
+                         @ApiParam(value = "桶名", required = true)
+                         @RequestParam("bucketName") String bucketName) {
+        String bucketPolicy = fileService.queryBucketPolicy(bucketName);
+        if(!StringUtils.isEmpty(bucketPolicy)){
+            return R.ok().data("bucketPolicy",bucketPolicy);
+        }
+        return R.error();
     }
 }

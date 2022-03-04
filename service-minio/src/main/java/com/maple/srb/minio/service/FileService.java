@@ -18,4 +18,6 @@ public interface FileService {
     boolean removeFile(String bucketName,String fileName);
 
     boolean removeFiles(String bucketName, String keys);
+
+    String queryBucketPolicy(String bucketName);
 }

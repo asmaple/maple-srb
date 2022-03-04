@@ -7,7 +7,9 @@ import com.maple.srb.minio.service.FileService;
 import com.maple.srb.minio.util.MinioUtil;
 import io.minio.Result;
 import io.minio.messages.DeleteError;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
@@ -17,6 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Slf4j
 @Service
 public class FileServiceImpl implements FileService {
 
@@ -96,6 +99,17 @@ public class FileServiceImpl implements FileService {
             e.getStackTrace();
         }
         return false;
+    }
+
+    @Override
+    public String queryBucketPolicy(String bucketName) {
+        Assert.notEmpty(bucketName, ResponseEnum.DOWNLOAD_ERROR);
+        try {
+            return minioUtil.getBucketPolicy(bucketName);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private static int getIterableCount(Iterable<?> i){
