@@ -1,10 +1,7 @@
 package com.maple.srb.minio.controller.api;
 
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.json.JSONUtil;
-import com.maple.common.exception.Assert;
 import com.maple.common.result.R;
-import com.maple.common.result.ResponseEnum;
+import com.maple.srb.minio.client.CoreFileInfoClient;
 import com.maple.srb.minio.pojo.dto.FileDTO;
 import com.maple.srb.minio.service.FileService;
 import com.maple.srb.minio.util.MinioUtil;
@@ -12,6 +9,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,6 +26,9 @@ public class FileController {
 
     @Resource
     private FileService fileService;
+
+    @Resource
+    private CoreFileInfoClient coreFileInfoClient;
 
 
     /**
@@ -47,7 +48,27 @@ public class FileController {
 
         FileDTO fileDTO = fileService.uploadFile(file,bucketName);
         if(fileDTO != null){
-            return R.ok().data("fileInfo",fileDTO).message("文件上传成功");
+            // 桶名称
+             String dtoBucketName = fileDTO.getBucketName();
+            // 对象名称
+            String objectName = fileDTO.getObjectName();
+            // 重命名的文件名称
+            String fileRename = fileDTO.getFileRename();
+            // 外链
+            String fileUrl = fileDTO.getFileUrl();
+            //文件原始名称
+            String originalFilename = fileDTO.getOriginalFilename();
+            // 文件类型
+            String fileType = fileDTO.getFileType();
+            // 文件长度
+            Long fileSize = fileDTO.getFileSize();
+            // 加密密钥
+            String encryptKey = fileDTO.getEncryptKey();
+
+            R insertFileResult = coreFileInfoClient.insertFile(dtoBucketName,objectName,fileRename,fileUrl,originalFilename,fileType,fileSize,encryptKey);
+            if(insertFileResult.isOk()) {
+                return R.ok().data("fileInfo",fileDTO).message("文件上传成功");
+            }
         }
         return R.error().message("文件上传失败");
     }

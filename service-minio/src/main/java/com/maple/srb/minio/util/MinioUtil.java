@@ -80,8 +80,8 @@ public class MinioUtil {
         return FileDTO.builder().bucketName(bucketName)
                 .objectName(objectName)
                 .originalFilename(fileName)
-                .url(fileUrl)
-                .rename(rename)
+                .fileUrl(fileUrl)
+                .fileRename(rename)
                 .fileType(fileType)
                 .fileSize(fileSize)
                 .build();

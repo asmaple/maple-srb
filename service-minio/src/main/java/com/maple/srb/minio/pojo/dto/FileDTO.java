@@ -20,11 +20,11 @@ public class FileDTO {
     /**
      * 重命名的文件名称
      */
-    private String rename;
+    private String fileRename;
     /**
      * 外链
      */
-    private String url;
+    private String fileUrl;
 
     /**
      * 文件原始名称

@@ -95,4 +95,8 @@ public class R {
         this.setCode(code);
         return this;
     }
+
+    public boolean isOk(){
+        return this.code.equals(ResponseEnum.SUCCESS.getCode());
+    }
 }
