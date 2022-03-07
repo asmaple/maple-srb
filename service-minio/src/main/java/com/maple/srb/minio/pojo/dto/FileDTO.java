@@ -46,6 +46,11 @@ public class FileDTO {
      */
     private String encryptKey;
 
+    /**
+     * srb module name
+     */
+    private String moduleName;
+
     @Tolerate
     public FileDTO() {
 

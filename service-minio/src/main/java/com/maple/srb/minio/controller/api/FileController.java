@@ -39,14 +39,18 @@ public class FileController {
      */
     @ApiOperation("文件上传")
     @PostMapping("/upload")
+    @ResponseBody
     public R upload(
             @ApiParam(value= "文件", required = true)
             @RequestParam("file") MultipartFile file,
 
             @ApiParam(value = "桶名", required = true)
-            @RequestParam("bucketName") String bucketName) {
+            @RequestParam("bucketName") String bucketName,
 
-        FileDTO fileDTO = fileService.uploadFile(file,bucketName);
+            @ApiParam(value = "模块名", required = true)
+            @RequestParam("moduleName") String moduleName) {
+
+        FileDTO fileDTO = fileService.uploadFile(file,bucketName,moduleName);
         if(fileDTO != null){
             // 桶名称
              String dtoBucketName = fileDTO.getBucketName();
@@ -65,7 +69,9 @@ public class FileController {
             // 加密密钥
             String encryptKey = fileDTO.getEncryptKey();
 
-            R insertFileResult = coreFileInfoClient.insertFile(dtoBucketName,objectName,fileRename,fileUrl,originalFilename,fileType,fileSize,encryptKey);
+            String dtoModuleName = fileDTO.getModuleName();
+
+            R insertFileResult = coreFileInfoClient.insertFile(dtoBucketName,objectName,fileRename,fileUrl,originalFilename,fileType,fileSize,encryptKey,dtoModuleName);
             if(insertFileResult.isOk()) {
                 return R.ok().data("fileInfo",fileDTO).message("文件上传成功");
             }

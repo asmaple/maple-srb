@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 
 public interface FileService {
 
-    FileDTO uploadFile(MultipartFile multipartFile, String bucketName);
+    FileDTO uploadFile(MultipartFile multipartFile, String bucketName, String moduleName);
 
     boolean downloadFile(HttpServletResponse httpServletRespons,String bucketName,String fileName);
 

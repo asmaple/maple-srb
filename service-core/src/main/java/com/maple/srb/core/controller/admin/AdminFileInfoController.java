@@ -27,8 +27,8 @@ public class AdminFileInfoController {
 
     @ApiOperation("新增文件")
     @PostMapping("/insertFile")
-    public R insertFile(@RequestParam String bucketName, @RequestParam String objectName, @RequestParam String fileRename, @RequestParam String fileUrl, @RequestParam String originalFilename, @RequestParam String fileType, @RequestParam Long fileSize, @RequestParam(required = false) String encryptKey){
-       return fileInfoService.insertFile(bucketName, objectName, fileRename, fileUrl, originalFilename, fileType, fileSize, encryptKey);
+    public R insertFile(@RequestParam String bucketName, @RequestParam String objectName, @RequestParam String fileRename, @RequestParam String fileUrl, @RequestParam String originalFilename, @RequestParam String fileType, @RequestParam Long fileSize, @RequestParam(required = false) String encryptKey, @RequestParam(required = false) String moduleName){
+       return fileInfoService.insertFile(bucketName, objectName, fileRename, fileUrl, originalFilename, fileType, fileSize, encryptKey,moduleName);
     }
 }
 

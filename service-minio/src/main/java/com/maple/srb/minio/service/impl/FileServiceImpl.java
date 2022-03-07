@@ -28,11 +28,12 @@ public class FileServiceImpl implements FileService {
 
 
     @Override
-    public FileDTO uploadFile(MultipartFile multipartFile, String bucketName) {
+    public FileDTO uploadFile(MultipartFile multipartFile, String bucketName, String moduleName) {
         Assert.notNull(multipartFile, ResponseEnum.UPLOAD_ERROR);
         Assert.notEmpty(bucketName, ResponseEnum.UPLOAD_ERROR);
+        Assert.notEmpty(moduleName, ResponseEnum.UPLOAD_ERROR);
         try {
-            FileDTO fileDTO = minioUtil.uploadFile(multipartFile, bucketName);
+            FileDTO fileDTO = minioUtil.uploadFile(multipartFile, bucketName,moduleName);
             return fileDTO;
         } catch (Exception e) {
             e.printStackTrace();

@@ -8,5 +8,5 @@ import org.springframework.web.bind.annotation.*;
 public interface CoreFileInfoClient {
 
     @PostMapping("/admin/core/fileInfo/insertFile")
-    R insertFile(@RequestParam String bucketName, @RequestParam String objectName, @RequestParam String fileRename, @RequestParam String fileUrl, @RequestParam String originalFilename, @RequestParam String fileType, @RequestParam Long fileSize, @RequestParam(required = false) String encryptKey);
+    R insertFile(@RequestParam String bucketName, @RequestParam String objectName, @RequestParam String fileRename, @RequestParam String fileUrl, @RequestParam String originalFilename, @RequestParam String fileType, @RequestParam Long fileSize, @RequestParam(required = false) String encryptKey,@RequestParam(required = false) String moduleName);
 }

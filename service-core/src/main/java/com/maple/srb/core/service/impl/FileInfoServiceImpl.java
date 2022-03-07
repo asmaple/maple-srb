@@ -10,6 +10,7 @@ import com.maple.srb.core.service.FileInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * <p>
@@ -25,7 +26,7 @@ public class FileInfoServiceImpl extends ServiceImpl<FileInfoMapper, FileInfo> i
 
     @Transactional(rollbackFor = Exception.class) // 事务，出错回退
     @Override
-    public R insertFile(String bucketName, String objectName, String fileRename, String fileUrl, String originalFilename, String fileType, Long fileSize, String encryptKey) {
+    public R insertFile(String bucketName, String objectName, String fileRename, String fileUrl, String originalFilename, String fileType, Long fileSize, String encryptKey,String moduleName) {
         FileInfo fileInfo = new FileInfo();
         fileInfo.setBucketName(bucketName);
         fileInfo.setObjectName(objectName);
@@ -35,6 +36,7 @@ public class FileInfoServiceImpl extends ServiceImpl<FileInfoMapper, FileInfo> i
         fileInfo.setFileType(fileType);
         fileInfo.setFileSize(fileSize);
         fileInfo.setEncryptKey(encryptKey);
+        fileInfo.setModuleName(moduleName);
 
         log.error("=insertFile====>>>>" + bucketName);
         log.error("=insertFile====>>>>" + objectName);
@@ -44,6 +46,7 @@ public class FileInfoServiceImpl extends ServiceImpl<FileInfoMapper, FileInfo> i
         log.error("=insertFile====>>>>" + fileType);
         log.error("=insertFile====>>>>" + fileSize);
         log.error("=insertFile====>>>>" + encryptKey);
+        log.error("=insertFile====>>>>" + moduleName);
         int count = baseMapper.insert(fileInfo);
         R insertFileResult = R.error();
         if(count > 0){

@@ -60,7 +60,7 @@ public class MinioUtil {
     /**
      * 上传文件
      */
-    public FileDTO uploadFile(MultipartFile file,String bucketName) throws Exception {
+    public FileDTO uploadFile(MultipartFile file,String bucketName,String moduleName) throws Exception {
         if (!bucketExists(bucketName)) {
             return null;
         }
@@ -84,6 +84,7 @@ public class MinioUtil {
                 .fileRename(rename)
                 .fileType(fileType)
                 .fileSize(fileSize)
+                .moduleName(moduleName)
                 .build();
     }
 

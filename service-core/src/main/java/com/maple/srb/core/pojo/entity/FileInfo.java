@@ -54,6 +54,9 @@ public class FileInfo implements Serializable {
     @ApiModelProperty(value = "秘钥Key")
     private String encryptKey;
 
+    @ApiModelProperty(value = "模块名")
+    private String moduleName;
+
     @ApiModelProperty(value = "创建时间")
     private LocalDateTime createTime;
 
